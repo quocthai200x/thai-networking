@@ -16,6 +16,7 @@ import { getAllApplicationIn_User } from "./apis/application"
 import { inject } from '@vercel/analytics';
 
 import { useUserStore } from "./stores/userStore"
+import { processExpression } from "@vue/compiler-core";
 export default {
   name: "App",
   data() {
@@ -25,7 +26,9 @@ export default {
     }
   },
   async created() {
-    inject();
+    if(process.env.NODE_ENV === 'production'){
+      inject();
+    }
     await this.checkUserExisted();
   },
 
