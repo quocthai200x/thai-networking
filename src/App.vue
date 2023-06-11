@@ -13,6 +13,7 @@
 <script>
 import { getMe } from "./apis/auth"
 import { getAllApplicationIn_User } from "./apis/application"
+import { inject } from '@vercel/analytics';
 
 import { useUserStore } from "./stores/userStore"
 export default {
@@ -24,6 +25,7 @@ export default {
     }
   },
   async created() {
+    inject();
     await this.checkUserExisted();
   },
 
