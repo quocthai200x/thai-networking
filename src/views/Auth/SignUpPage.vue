@@ -10,8 +10,7 @@
                 <q-card square bordered class="q-pa-lg shadow-1">
                     <q-card-section>
                         <q-form class="q-gutter-md">
-                            <q-input color="negative" square filled clearable v-model="email" type="email"
-                                label="Email" />
+                            <q-input color="negative" square filled clearable v-model="email" type="email" label="Email" />
                             <q-input color="negative" square filled clearable v-model="name" type="text" label="Tên" />
                             <q-input color="negative" square filled clearable v-model="phone" type="text"
                                 label="Số điện thoại" />
@@ -67,19 +66,16 @@ export default {
     },
     methods: {
         goBack() {
-            if (this.prevRoute || this.prevRoute == "/dang-nhap" || this.prevRoute == "/dang-ki") {
-                this.$router.push('/')
-            } else {
-                this.$router.go(-1)
-            }
+            this.$router.go(-1)
         },
 
         _register() {
             this.message = ''
 
             regiserUser({ email: this.email, password: this.password, name: this.name, phone: this.phone }).then(data => {
-                console.log(data)
+                // console.log(data)
                 if (data) {
+                    localStorage.setItem('session', data.token)
                     getMe().then(data => {
                         if (data) {
                             let { email, _id, info, activity, roleNumber, createdAt, updatedAt, } = data.user
@@ -104,6 +100,4 @@ export default {
 
 }
 </script>
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

@@ -43,7 +43,7 @@
     </div>
 </template>
 <script>
-import { login, getMe } from "@/apis/auth"
+import { login, getMe } from "../../apis/auth"
 
 import { useUserStore } from "@/stores/userStore"
 import LayoutFake from "@/layouts/LayoutFake.vue"
@@ -55,17 +55,28 @@ export default {
             password: "",
             message: "",
             userStore: useUserStore(),
-            prevRoute: null
+            prevRoute: null,
+            nextRoute: null
         }
     },
     created() {
         this.$emit("update:layout", LayoutFake)
         this.prevRoute = this.$router.options.history.state.back
+        console.log(this.$router.options.history.state)
+        this.nextRoute = this.$router.options.history.state.forward
+
+        this.init();
         // this.checkLoggedIn()
     },
     methods: {
+        init(){
+            if(this.nextRoute == "/dang-ki" && this.prevRoute){
+                this.$router.go(-1)
+            }
+        },
         goBack() {
-            if (this.prevRoute || this.prevRoute == "/dang-nhap" || this.prevRoute == "/dang-ki") {
+            if ( this.prevRoute == "/dang-nhap" || this.prevRoute == "/dang-ki") {
+                // console.log(this.prevRoute);
                 this.$router.push('/')
             } else {
                 this.$router.go(-1)
@@ -75,6 +86,7 @@ export default {
             this.message = ''
             login({ email: this.email, password: this.password }).then(dataLog => {
                 if (dataLog) {
+                    localStorage.setItem('session', dataLog.token)
                     getMe().then(data => {
                         if (data) {
                             let { email, _id, info, activity, roleNumber, createdAt, updatedAt, } = data.user

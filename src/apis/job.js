@@ -74,7 +74,7 @@ export const getJobOfCompany = async ({companyName})=>{
 
 export const updateViewNumber = async ({jobName_companyId}) =>{
     try {
-        let res = await axios.put(`/job/update-view/:jobName_companyId`)        
+        let res = await axios.put(`/job/update-view/${jobName_companyId}`)        
         if(res.status == 200){
             return res.data
         }else{

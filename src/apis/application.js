@@ -121,6 +121,7 @@ export const getAllApplicationIn_User = async () =>{
 
 export const getByUserWithJob = async ({jobId}) =>{
     try {
+        
         let res = await axios.get(`/application/by-user-with-job?jobId=${jobId}`)
         if(res.status == 200){
             return res.data 

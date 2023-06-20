@@ -4,11 +4,12 @@
             <CarouselBanner :key="keyUpdateUI" :arrayImage="companyData.info.imageIntro"></CarouselBanner>
         </div>
         <div class=" p-container">
-            <CardJobInfoVue :key="keyUpdateUI" :recruiter="recruiter" :loading="loading" :jobDetail="jobDetail" :companyData="companyData">
+            <CardJobInfoVue :key="keyUpdateUI" :recruiter="recruiter" :loading="loading" :jobDetail="jobDetail"
+                :companyData="companyData">
             </CardJobInfoVue>
             <TabJobInfoVue :key="keyUpdateUI" :loading="loading" :jobDetail="jobDetail" :companyData="companyData">
             </TabJobInfoVue>
-            <div v-if="(similarJob.length>0)">
+            <div v-if="(similarJob.length > 0)">
 
                 <div class="text-h5 q-mt-xl">Công việc tương tự</div>
                 <div class="row">
@@ -19,7 +20,7 @@
                     </div>
 
                     <div class="q-my-xs col-2">
-                        
+
                         <q-img
                             src="https://marketplace.canva.com/EAE8gd5ikZM/1/0/960w/canva-t%C3%ADm-nh%E1%BA%A1t-v%C3%A0-tr%E1%BA%AFng-th%E1%BB%9Di-trang-bi%E1%BB%83u-ng%E1%BB%AF-d%E1%BB%8Dc-quay-l%E1%BA%A1i-l%C3%A0m-vi%E1%BB%87c-3BtVdlXMH_M.jpg"></q-img>
                     </div>
@@ -33,7 +34,7 @@
     </div>
 </template>
 <script>
-import { getJobByNameAndCompanyId, updateViewNumber } from "@/apis/job"
+import { getJobByNameAndCompanyId, updateViewNumber } from "../../apis/job"
 import { searchJob } from "@/apis/search"
 import CarouselBanner from "@/components/CarouselBanner.vue"
 import CardJobInfoVue from '@/components/JobDetail/CardJobInfo.vue'
@@ -91,19 +92,20 @@ export default {
             viewed: 0,
             _id: "",
         }
-        return { userStore: useUserStore(),companyData, jobDetail, keyUpdateUI: 0, loading: true, othersJob: [], similarJob: [], recruiter: "" }
+        return { userStore: useUserStore(), companyData, jobDetail, keyUpdateUI: 0, loading: true, othersJob: [], similarJob: [], recruiter: "" }
     },
     created() {
         this.$emit("update:layout", DrawerVue)
         this._getJobDetail({ jobName_companyId: this.$route.params.jobName_companyId })
-        if(this.userStore.getUserState._id){
-            updateViewNumber()
+        if (this.userStore.getUserState._id) {
+            console.log(this.$route.params.jobName_companyId);
+            updateViewNumber({jobName_companyId: this.$route.params.jobName_companyId})
         }
 
     },
     watch: {
         "$route.params.jobName_companyId"(newValue, oldValue) {
-            if(newValue && newValue !== oldValue  && this.$route.name =="Job detail"){
+            if (newValue && newValue !== oldValue && this.$route.name == "Job detail") {
                 this._getJobDetail({ jobName_companyId: newValue })
             }
 
@@ -113,23 +115,25 @@ export default {
         _getJobDetail({ jobName_companyId }) {
             this.recruiter = this.$route.query.recruiter;
             getJobByNameAndCompanyId({ jobName_companyId }).then(data => {
-                if(data){
+                if (data) {
+                    // conssole.log(data);
                     this.jobDetail.info = data.info;
-                this.jobDetail.updatedAt = data.updatedAt;
-                this.jobDetail.createdAt = data.createdAt;
-                this.jobDetail.viewed = data.viewed;
-                this.jobDetail._id = data._id;
-                this.companyData = data.companyId
-                this.loading = false
-                // this.arr = data.companyId.info.imageIntro.slice();
-                this.keyUpdateUI++;
-                let text = data.info.name;
-                data.info.keyword.forEach(keyword => {
-                    text = text + " " + keyword
-                })
-                this._getRecommendJobs({ text });
+                    this.jobDetail.updatedAt = data.updatedAt;
+                    this.jobDetail.createdAt = data.createdAt;
+                    this.jobDetail.viewed = data.viewed;
+                    this.jobDetail._id = data._id;
+                    this.companyData = data.companyId
+                    this.loading = false
+                    // this.arr = data.companyId.info.imageIntro.slice();
+                    this.keyUpdateUI++;
+                    let text = data.info.name;
+                    data.info.keyword.forEach(keyword => {
+                        text = text + " " + keyword
+                    })
+                    this._getRecommendJobs({ text });
                 }
-                else{
+                else {
+                  
                     this.$router.push(`/viec-lam`)
                 }
 
@@ -147,6 +151,4 @@ export default {
 
 }
 </script>
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>
